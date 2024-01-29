@@ -20,7 +20,11 @@ macro_rules! local_config_name {
 }
 
 #[derive(Deserialize)]
-pub struct Config {}
+pub struct Config {
+    pub default_width: Option<u32>,
+    pub default_height: Option<u32>,
+    pub default_scale: Option<f64>,
+}
 
 impl Config {
     pub fn parse<T: AsRef<Path>>(dir: Option<T>) -> Result<Self> {

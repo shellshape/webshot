@@ -10,4 +10,5 @@ anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 dirs = "5"
 figment = { version = "0.10", features = ["json", "yaml", "toml", "env"] }
+headless_chrome = { version = "1.0.9", features = ["rustls"] }
 serde = { version = "1", features = ["derive"] }
