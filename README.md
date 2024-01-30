@@ -1,12 +1,32 @@
 # webshot
 
-< insert description here >
+A simple CLI tool to create screenshots from web pages in the terminal.
+
+This tool uses the [headless_chrome](https://crates.io/crates/headless_chrome) crate, which requires a local installation of Chrome or Chromium.
+
+> **Info**  
+> This is the successor for my old tool [zekroTJA/webshot](https://github.com/zekroTJA/webshot), which uses [puppeteer](https://pptr.dev).
 
 ## Usage
 
 ```
 $ webshot --help
-< insert help here >
+Simply screenshot websites from your terminal
+
+Usage: webshot [OPTIONS] <URL>
+
+Arguments:
+  <URL>  URL of the web page to be captured
+
+Options:
+  -c, --config <CONFIG>      Path to a config file
+  -o, --output <OUTPUT>      Output directory or file name
+  -W, --width <WIDTH>        Screen width
+  -H, --height <HEIGHT>      Screen height
+  -s, --scale <SCALE>        Scale factor
+      --wait-for <WAIT_FOR>  Wait for DOM element (query selector) [default: body]
+  -h, --help                 Print help
+  -V, --version              Print version
 ```
 
 ## Install
