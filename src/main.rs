@@ -5,6 +5,7 @@ use config::Config;
 use console::{style, Term};
 use headless_chrome::{
     protocol::cdp::{
+        Emulation::{MediaFeature, SetEmulatedMedia},
         Page::{CaptureScreenshotFormatOption, Viewport},
         Target::CreateTarget,
     },
@@ -46,14 +47,24 @@ struct Cli {
     /// Wait for DOM element (query selector)
     #[arg(long, default_value = "body")]
     wait_for: String,
+
+    /// Set preferred color scheme to 'dark'
+    #[arg(short, long)]
+    dark: bool,
 }
 
-fn main() -> Result<()> {
+fn main() {
+    let term = Term::stdout();
+
+    if let Err(err) = run(&term) {
+        write_line(&term, &format!("{} {}", style("Error:").bold().red(), err));
+    }
+}
+
+fn run(term: &Term) -> Result<()> {
     let cli = Cli::parse();
 
     let cfg = Config::parse(cli.config)?;
-
-    let term = Term::stdout();
 
     let orig_width = cli.width.or(cfg.default_width).unwrap_or(1920);
     let orig_height = cli.height.or(cfg.default_height).unwrap_or(1080);
@@ -87,6 +98,16 @@ fn main() -> Result<()> {
         .italic()
         .to_string(),
     );
+
+    if cli.dark {
+        tab.call_method(SetEmulatedMedia {
+            media: None,
+            features: Some(vec![MediaFeature {
+                name: "prefers-color-scheme".to_string(),
+                value: "dark".to_string(),
+            }]),
+        })?;
+    }
 
     tab.wait_for_element(&cli.wait_for)?;
 
