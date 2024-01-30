@@ -73,11 +73,11 @@ fn run(term: &Term) -> Result<()> {
     let width = orig_width as f64 / scale;
     let height = orig_height as f64 / scale;
 
-    write_line(&term, &style("Open browser ...").italic().to_string());
+    write_line(term, &style("Open browser ...").italic().to_string());
 
     let browser = Browser::default()?;
 
-    write_line(&term, &style("Open new tab ...").italic().to_string());
+    write_line(term, &style("Open new tab ...").italic().to_string());
 
     let tab = browser.new_tab_with_options(CreateTarget {
         url: cli.url.clone(),
@@ -90,7 +90,7 @@ fn run(term: &Term) -> Result<()> {
     })?;
 
     write_line(
-        &term,
+        term,
         &style(format!(
             "Waiting for element '{}' ...",
             style(&cli.wait_for).cyan()
@@ -126,7 +126,7 @@ fn run(term: &Term) -> Result<()> {
     };
 
     write_line(
-        &term,
+        term,
         &style("Capturing screenshot ...").italic().to_string(),
     );
 
@@ -138,7 +138,7 @@ fn run(term: &Term) -> Result<()> {
     )?;
 
     write_line(
-        &term,
+        term,
         &style(format!(
             "Writing screenshot to '{}' ...",
             style(&output_path.to_string_lossy()).cyan()
@@ -150,7 +150,7 @@ fn run(term: &Term) -> Result<()> {
     fs::write(&output_path, image_data)?;
 
     write_line(
-        &term,
+        term,
         &style(format!(
             "Successfully saved screenshot to '{}'.\n",
             style(&output_path.to_string_lossy()).cyan()
