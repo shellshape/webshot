@@ -3,6 +3,7 @@ use anyhow::Result;
 use clap::{command, Parser};
 use config::Config;
 use console::{style, Term};
+use duration_string::DurationString;
 use headless_chrome::{
     protocol::cdp::{
         Emulation::{MediaFeature, SetEmulatedMedia},
@@ -15,6 +16,7 @@ use std::{
     fs,
     io::{self, Write},
     path::{Path, PathBuf},
+    thread,
 };
 
 /// Simply screenshot websites from your terminal
@@ -47,6 +49,10 @@ struct Cli {
     /// Wait for DOM element (query selector)
     #[arg(long, default_value = "body")]
     wait_for: String,
+
+    /// Wait for a given duration
+    #[arg(long)]
+    wait: Option<DurationString>,
 
     /// Set preferred color scheme to 'dark'
     #[arg(short, long)]
@@ -89,16 +95,6 @@ fn run(term: &Term) -> Result<()> {
         background: None,
     })?;
 
-    write_line(
-        term,
-        &style(format!(
-            "Waiting for element '{}' ...",
-            style(&cli.wait_for).cyan()
-        ))
-        .italic()
-        .to_string(),
-    );
-
     if cli.dark {
         tab.call_method(SetEmulatedMedia {
             media: None,
@@ -109,7 +105,26 @@ fn run(term: &Term) -> Result<()> {
         })?;
     }
 
-    tab.wait_for_element(&cli.wait_for)?;
+    if let Some(wait) = cli.wait {
+        write_line(
+            term,
+            &style(format!("Waiting for {} ...", style(&wait).cyan()))
+                .italic()
+                .to_string(),
+        );
+        thread::sleep(wait.into());
+    } else {
+        write_line(
+            term,
+            &style(format!(
+                "Waiting for element '{}' ...",
+                style(&cli.wait_for).cyan()
+            ))
+            .italic()
+            .to_string(),
+        );
+        tab.wait_for_element(&cli.wait_for)?;
+    };
 
     let viewport = Viewport {
         x: 0.0,

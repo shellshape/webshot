@@ -8,8 +8,9 @@ edition = "2021"
 [dependencies]
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
-console = "0.15.8"
+console = "0.15"
 dirs = "5"
+duration-string = "0.4"
 figment = { version = "0.10", features = ["json", "yaml", "toml", "env"] }
-headless_chrome = { version = "1.0.9", features = ["rustls"] }
+headless_chrome = { version = "1", features = ["rustls"] }
 serde = { version = "1", features = ["derive"] }
